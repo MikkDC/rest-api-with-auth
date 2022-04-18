@@ -34,7 +34,7 @@ const decryptPassword = async (req, res, next) => {
 const tokenCheck = async (req, res, next) => {
 	try {
 		const token = req.header("Authorization").replace("Bearer ", "");
-		const decoded = await jwt.verify(token, process.env.SECRET);
+		const decoded = await jwt.verify(token, process.env.SECRET_KEY);
 		const user = await User.findById(decoded._id);
 		req.user = user;
 		next();
