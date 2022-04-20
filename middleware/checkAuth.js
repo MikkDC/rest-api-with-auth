@@ -21,7 +21,9 @@ const hashPassword = async (req, res, next) => {
 
 const decryptPassword = async (req, res, next) => {
     try {
-        const infoUser = await User.findOne({ username: req.body.username }); /* finds a user and stores it in the info User variable */
+        const infoUser = await User.findOne({
+            username: req.body.username,
+        }); /* finds a user and stores it in the info User variable */
         if (await bcrypt.compare(req.body.password, infoUser.password)) {
             req.user = infoUser; /* compares the found users password in the DB with the one inputted (after hashing) */
             next();
@@ -38,15 +40,15 @@ const decryptPassword = async (req, res, next) => {
 
 const tokenCheck = async (req, res, next) => {
     try {
-		// the first line removes the default auth token contained in the header
-		// and replaces it with an empty string
-        const token = req.header("Authorization").replace("Bearer ", ""); 
-        
-		// Verify takes 2 items - the hashed token and the secret with which it 
-		// was hashed (SECRET_KEY in this case) and converts it back to the users _id
-		const decoded = await jwt.verify(token, process.env.SECRET_KEY);
-        
-		const user = await User.findById(decoded._id);
+        // the first line removes the default auth token contained in the header
+        // and replaces it with an empty string
+        const token = req.header("Authorization").replace("Bearer ", "");
+
+        // Verify takes 2 items - the hashed token and the secret with which it
+        // was hashed (SECRET_KEY in this case) and converts it back to the users _id
+        const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+
+        const user = await User.findById(decoded._id);
         req.user = user;
         next();
     } catch (error) {
