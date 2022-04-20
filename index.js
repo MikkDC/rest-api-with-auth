@@ -1,16 +1,22 @@
 require("./connection");
 const express = require("express");
+// cors stands for Cross Origin Resoure Sharing
+// Allows 2 apps located in different network locations
+// to communicate with eah other securely
+const cors = require("cors");
 const userRouter = require("./user/userRoutes");
 const app = express();
 const port = process.env.HTTP_PORT;
 
-// handle JSON data
+// Allows app to interpret JSON data as Javascript objects
 app.use(express.json());
+app.use(cors()); /* Allows use of previously mentioned cors */
 
-// user routes
+// User routes. It is placed below cors and express so that the 
+// routes can make use of JSON and cors
 app.use(userRouter);
 
-// run express application
+// runs express application
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
 });

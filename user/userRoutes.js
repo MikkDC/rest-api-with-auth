@@ -7,9 +7,11 @@ const {
 	deleteUser,
 	login,
 } = require("./userControllers");
+
 const userRouter = Router();
 
-// CRUD routes
+// CRUD routes (note: get and delete http verbs DO NOT 
+// have access to the body, ONLY the headers)
 userRouter.post("/user", hashPassword, regUser);
 userRouter.get("/user", findUser);
 userRouter.put("/user", updateUser);

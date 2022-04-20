@@ -9,6 +9,8 @@ exports.regUser = async (req, res) => {
             username: req.body.username,
             password: req.body.password,
         });
+        // creates a JWT (json web token) using the _id value created by MongoDB
+        // and then hash it using the SECRET_KEY in the .env as the source
         const token = await jwt.sign(
             { _id: newUser._id },
             process.env.SECRET_KEY
@@ -16,7 +18,7 @@ exports.regUser = async (req, res) => {
         res.status(200).send({
             message: "User Registered",
             user: newUser,
-            token,
+            token: token
         });
     } catch (error) {
         console.log(error);
