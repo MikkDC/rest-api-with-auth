@@ -1,8 +1,8 @@
 require("./connection");
 const express = require("express");
-// cors stands for Cross Origin Resoure Sharing
+// cors stands for Cross Origin Resource Sharing
 // Allows 2 apps located in different network locations
-// to communicate with eah other securely
+// to communicate with each other securely
 const cors = require("cors");
 const userRouter = require("./user/userRoutes");
 const app = express();
