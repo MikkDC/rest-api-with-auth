@@ -47,10 +47,17 @@ const tokenCheck = async (req, res, next) => {
         // Verify takes 2 items - the hashed token and the secret with which it
         // was hashed (SECRET_KEY in this case) and converts it back to the users _id
         const decoded = await jwt.verify(token, process.env.SECRET_KEY);
+        req.user = await User.findOne({ _id: decodedToken._id });
+        if (req.user) {
+          next();
+        } else {
+            throw new Error("Invalid token");
+          }
+        // Commented out alternative code from prior weeks
+        // const user = await User.findById(decoded._id);
+        // req.user = user;
+        // next();
 
-        const user = await User.findById(decoded._id);
-        req.user = user;
-        next();
     } catch (error) {
         console.log(error);
         res.status(500).send({ err: error.message });
