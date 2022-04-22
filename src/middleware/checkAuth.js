@@ -47,7 +47,7 @@ const tokenCheck = async (req, res, next) => {
         // Verify takes 2 items - the hashed token and the secret with which it
         // was hashed (SECRET_KEY in this case) and converts it back to the users _id
         const decoded = await jwt.verify(token, process.env.SECRET_KEY);
-        req.user = await User.findOne({ _id: decodedToken._id });
+        req.user = await User.findOne({ _id: decoded._id });
         if (req.user) {
           next();
         } else {
