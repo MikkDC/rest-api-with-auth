@@ -25,7 +25,8 @@ const decryptPassword = async (req, res, next) => {
             username: req.body.username,
         }); /* finds a user and stores it in the info User variable */
         if (await bcrypt.compare(req.body.password, infoUser.password)) {
-            req.user = infoUser; /* compares the found users password in the DB with the one inputted (after hashing) */
+            req.user =
+                infoUser; /* compares the found users password in the DB with the one inputted (after hashing) */
             next();
         } else {
             res.status(500).send({
@@ -49,15 +50,14 @@ const tokenCheck = async (req, res, next) => {
         const decoded = await jwt.verify(token, process.env.SECRET_KEY);
         req.user = await User.findOne({ _id: decoded._id });
         if (req.user) {
-          next();
+            next();
         } else {
             throw new Error("Invalid token");
-          }
+        }
         // Commented out alternative code from prior weeks
         // const user = await User.findById(decoded._id);
         // req.user = user;
         // next();
-
     } catch (error) {
         console.log(error);
         res.status(500).send({ err: error.message });
