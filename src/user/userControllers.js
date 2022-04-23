@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("./userModel");
+const bcrypt = require("bcryptjs")
 
 // (CREATE) - Registers new user with username and password
 exports.regUser = async (req, res) => {
@@ -18,7 +19,10 @@ exports.regUser = async (req, res) => {
     }
 };
 
-// (READ) - Finds a user by username
+// (READ) - Finds all users when using a GET with just /user and nothing in body
+// or just one user by entering a username into the body 
+// for example - "username" : "mikk" will find a user name mikk, if one exists
+// if not "user": null is returned in the request
 exports.findUser = async (req, res) => {
     try {
         if (req.body.username) {
@@ -35,16 +39,17 @@ exports.findUser = async (req, res) => {
 };
 
 // (UPDATE) Allow a user to change username
+// Allows users already in DB to be updated
+// but does nothing if user is not in DB to begin with
 exports.updateUser = async (req, res) => {
     try {
-        if (req.body.newusername) {
+        if (req.body.username) {
             const amendUser = await User.updateOne(
                 { username: req.body.username },
                 { $set: { username: req.body.newusername } }
             );
             res.status(200).send({
-                amendUser,
-                message: `Username ${req.body.username} updated to: ${req.body.newusername}`,
+                amendUser
             });
         } else {
             res.status(400).send({ message: "Invalid request" });
@@ -56,11 +61,15 @@ exports.updateUser = async (req, res) => {
 };
 
 // (DELETE) - removes a user from the database
+// Ideally, this would also check that the password was entered correctly
+// but this just provides a way of quickly deleting users
+// for demonstration purposes only
 exports.deleteUser = async (req, res) => {
     try {
         const eraseUser = await User.deleteOne({
             username: req.body.username,
         });
+                
         res.status(200).send({
             eraseUser,
             message: `User ${req.body.username} has been Deleted`,
