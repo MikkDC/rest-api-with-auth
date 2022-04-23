@@ -6,7 +6,7 @@ const express = require("express");
 const cors = require("cors");
 const userRouter = require("./user/userRoutes");
 const app = express();
-const port = process.env.HTTP_PORT;
+const port = process.env.PORT || 5001;
 
 // Allows app to interpret JSON data as Javascript objects
 app.use(express.json());

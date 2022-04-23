@@ -1,25 +1,17 @@
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("./userModel");
 
 // (CREATE) - Registers new user with username and password
 exports.regUser = async (req, res) => {
     try {
-        const newUser = await User.create({
-            username: req.body.username,
-            password: req.body.password,
-        });
+        const newUser = await User.create(req.body);
         // creates a JWT (json web token) using the _id value created by MongoDB
         // and then hash it using the SECRET_KEY in the .env as the source
         const token = await jwt.sign(
             { _id: newUser._id },
             process.env.SECRET_KEY
         );
-        res.status(200).send({
-            message: "User Registered",
-            user: newUser,
-            token: token
-        });
+        res.status(200).send({ user: newUser, token: token });
     } catch (error) {
         console.log(error);
         res.status(500).send({ err: error.message });
